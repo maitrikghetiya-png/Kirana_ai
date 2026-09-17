@@ -1,0 +1,93 @@
+{
+  "ramesh": {
+    "customer_name": "Ramesh",
+    "balance": 200.0,
+    "transactions": [
+      {
+        "type": "credit",
+        "amount": 500.0,
+        "item": "doodh",
+        "timestamp": "2026-09-17 21:17:06"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:17:06"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:22"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:30"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:31"
+      },
+      {
+        "type": "credit",
+        "amount": 500.0,
+        "item": "doodh",
+        "timestamp": "2026-09-17 21:19:36"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:37"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:39"
+      },
+      {
+        "type": "credit",
+        "amount": 500.0,
+        "item": "doodh",
+        "timestamp": "2026-09-17 21:19:41"
+      },
+      {
+        "type": "payment",
+        "amount": 300.0,
+        "timestamp": "2026-09-17 21:19:42"
+      }
+    ],
+    "last_updated": "2026-09-17 21:19:42"
+  },
+  "mohan": {
+    "customer_name": "Mohan",
+    "balance": 300.0,
+    "transactions": [
+      {
+        "type": "credit",
+        "amount": 300.0,
+        "item": "dal",
+        "timestamp": "2026-09-17 21:17:06"
+      }
+    ],
+    "last_updated": "2026-09-17 21:17:06"
+  },
+  "suresh": {
+    "customer_name": "Suresh",
+    "balance": 250.0,
+    "transactions": [
+      {
+        "type": "credit",
+        "amount": 450.0,
+        "item": "cheeni",
+        "timestamp": "2026-09-17 21:17:06"
+      },
+      {
+        "type": "payment",
+        "amount": 200.0,
+        "timestamp": "2026-09-17 21:17:06"
+      }
+    ],
+    "last_updated": "2026-09-17 21:17:06"
+  }
+}
