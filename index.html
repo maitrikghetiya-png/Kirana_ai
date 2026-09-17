@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KiranaAI - Mobile Udhaar Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-light: #ccfbf1;
+      --primary-glow: rgba(15, 118, 110, 0.15);
+      --accent: #f59e0b;
+      --due-red: #dc2626;
+      --success-green: #16a34a;
+      --bg: #f1f5f9;
+      --phone-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --chat-bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    /* Mobile Mockup Shell */
+    .mobile-frame {
+      width: 100%;
+      max-width: 430px;
+      height: 92vh;
+      max-height: 880px;
+      background: var(--phone-bg);
+      display: flex;
+      flex-direction: column;
+      border-radius: 36px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header Bar */
+    header {
+      background: linear-gradient(145deg, #0d9488 0%, #0f766e 100%);
+      color: white;
+      padding: 16px 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: white;
+      color: #0f766e;
+      font-size: 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .header-titles h1 {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-tag {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.22);
+      padding: 2px 7px;
+      border-radius: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .header-titles p {
+      font-size: 11.5px;
+      color: #99f6e4;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 1px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #34d399;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px #34d399;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Live Udhaar Summary Card */
+    .ledger-banner {
+      background: #ffffff;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ledger-amount-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ledger-amount-box .label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ledger-amount-box .amount {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--due-red);
+      letter-spacing: -0.5px;
+      transition: color 0.3s ease;
+    }
+
+    .ledger-stats-right {
+      text-align: right;
+    }
+
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* 4-STEP DEMO FLOW STEPPER (Visually Prominent) */
+    .flow-card {
+      background: #f8fafc;
+      padding: 10px 14px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .flow-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .flow-title span {
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .flow-title .hint {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .stepper-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      position: relative;
+    }
+
+    .step-item {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .step-item:hover {
+      border-color: #0d9488;
+      transform: translateY(-1px);
+    }
+
+    .step-item.active {
+      border-color: #0d9488;
+      background: #f0fdfa;
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+    }
+
+    .step-item.completed {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .step-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+    }
+
+    .step-item.active .step-num {
+      background: #0d9488;
+      color: white;
+    }
+
+    .step-item.completed .step-num {
+      background: #10b981;
+      color: white;
+    }
+
+    .step-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.2;
+    }
+
+    .step-item.active .step-label {
+      color: #0f766e;
+    }
+
+    .step-item.completed .step-label {
+      color: #065f46;
+    }
+
+    .step-sub {
+      font-size: 9px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* Chat Messages Box */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 14px 8px;
+      background: var(--chat-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .msg-group.user {
+      align-items: flex-end;
+    }
+
+    .msg-group.agent {
+      align-items: flex-start;
+    }
+
+    .bubble {
+      max-width: 84%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      position: relative;
+      word-break: break-word;
+    }
+
+    .msg-group.user .bubble {
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+    }
+
+    .msg-group.agent .bubble {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    }
+
+    .tool-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .tool-badge.add_transaction {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .tool-badge.get_dues {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+    }
+
+    .tool-badge.record_payment {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+
+    .tool-badge.send_reminder {
+      background: #fffbeb;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+
+    .bubble-meta {
+      font-size: 10px;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+
+    .msg-group.user .bubble-meta {
+      text-align: right;
+      color: #ccfbf1;
+    }
+
+    .msg-group.agent .bubble-meta {
+      text-align: left;
+      color: var(--text-muted);
+    }
+
+    .bubble p {
+      margin-bottom: 6px;
+    }
+
+    .bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bubble strong {
+      font-weight: 700;
+    }
+
+    .reminder-box {
+      background: #f0fdfa;
+      border: 1.5px dashed #0d9488;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #134e4a;
+    }
+
+    .reminder-box .sms-header {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #0d9488;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #25d366;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      margin-top: 8px;
+      box-shadow: 0 3px 8px rgba(37, 211, 102, 0.35);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-whatsapp:hover {
+      background: #20ba5a;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(37, 211, 102, 0.45);
+    }
+
+    /* Typing Animation */
+    .typing-bar {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: fit-content;
+      margin-left: 14px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      background: #0d9488;
+      border-radius: 50%;
+      animation: bounce 1.3s infinite ease-in-out;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.15s; }
+    .dot:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* Bottom Input Bar */
+    footer {
+      background: #ffffff;
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 24px;
+      font-size: 13.5px;
+      outline: none;
+      font-family: inherit;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: #0d9488;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+    }
+
+    .btn-send {
+      width: 44px;
+      height: 44px;
+      background: #0d9488;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(13, 148, 136, 0.3);
+    }
+
+    .btn-send:hover {
+      background: #0f766e;
+      transform: scale(1.05);
+    }
+
+    .btn-send:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-frame">
+  <!-- Top App Header -->
+  <header>
+    <div class="header-main">
+      <div class="avatar">🏪</div>
+      <div class="header-titles">
+        <h1>KiranaAI <span class="badge-tag">MVP</span></h1>
+        <p><span class="live-dot"></span> Digital Udhaar Agent</p>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetLedger()" title="Clear ledger to start over">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+        <path d="M3 3v5h5"/>
+      </svg>
+      Reset
+    </button>
+  </header>
+
+  <!-- Live Balance Banner -->
+  <div class="ledger-banner">
+    <div class="ledger-amount-box">
+      <span class="label">Kul Udhaar (Total Dues)</span>
+      <span class="amount" id="total-dues">₹0</span>
+    </div>
+    <div class="ledger-stats-right">
+      <div class="customer-pill">
+        <span>👥</span> <strong id="customer-count">0</strong> grahak
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUALLY CLEAR 4-STEP DEMO FLOW -->
+  <div class="flow-card">
+    <div class="flow-title">
+      <span>Demo Flow (1-Tap Test)</span>
+      <span class="hint" onclick="runNextDemoStep()">Run Next Step ➔</span>
+    </div>
+    <div class="stepper-grid">
+      <!-- Step 1: Add Credit -->
+      <div class="step-item active" id="step-1" onclick="triggerStep(1)">
+        <div class="step-num" id="num-1">1</div>
+        <div class="step-label">Add Credit</div>
+        <div class="step-sub">₹500 Doodh</div>
+      </div>
+
+      <!-- Step 2: Ask Dues -->
+      <div class="step-item" id="step-2" onclick="triggerStep(2)">
+        <div class="step-num" id="num-2">2</div>
+        <div class="step-label">Ask Dues</div>
+        <div class="step-sub">Kaun Dena?</div>
+      </div>
+
+      <!-- Step 3: Record Payment -->
+      <div class="step-item" id="step-3" onclick="triggerStep(3)">
+        <div class="step-num" id="num-3">3</div>
+        <div class="step-label">Payment</div>
+        <div class="step-sub">₹300 Diye</div>
+      </div>
+
+      <!-- Step 4: Reminder -->
+      <div class="step-item" id="step-4" onclick="triggerStep(4)">
+        <div class="step-num" id="num-4">4</div>
+        <div class="step-label">Reminder</div>
+        <div class="step-sub">₹200 Baaki</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Log Container -->
+  <div class="chat-area" id="chat-area">
+    <div class="msg-group agent">
+      <div class="bubble">
+        <p><strong>Namaste Sethji! 🙏</strong></p>
+        <p>Aapka KiranaAI digital udhaar khata taiyaar hai. Demo flow shuru karne ke liye upar diye gaye <strong>Step 1</strong> par tap karein ya bol kar likhein.</p>
+        <div class="bubble-meta">KiranaAI • abhi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typing Indicator -->
+  <div id="typing-bar" class="typing-bar">
+    <span>KiranaAI soch raha hai</span>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <!-- Bottom Message Input -->
+  <footer>
+    <div class="input-wrap">
+      <input type="text" id="user-input" class="input-field" placeholder="Likhie: 'Ramesh liya 500 doodh'..." onkeydown="handleKeyDown(event)">
+    </div>
+    <button id="send-btn" class="btn-send" onclick="handleSend()" title="Send">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+  </footer>
+</div>
+
+<script>
+  const chatArea = document.getElementById('chat-area');
+  const userInput = document.getElementById('user-input');
+  const sendBtn = document.getElementById('send-btn');
+  const typingBar = document.getElementById('typing-bar');
+  const totalDuesEl = document.getElementById('total-dues');
+  const customerCountEl = document.getElementById('customer-count');
+
+  // 4 Core Demo Steps Definition
+  const DEMO_STEPS = {
+    1: { prompt: "Ramesh liya 500 doodh", tool: "add_transaction", next: 2 },
+    2: { prompt: "Kaun paisa dena hai?", tool: "get_dues", next: 3 },
+    3: { prompt: "Ramesh ne 300 de diye", tool: "record_payment", next: 4 },
+    4: { prompt: "Reminder", tool: "send_reminder", next: 1 }
+  };
+
+  let currentStep = 1;
+
+  function updateStepperUI(completedStep) {
+    if (completedStep >= 1 && completedStep <= 4) {
+      const stepEl = document.getElementById(`step-${completedStep}`);
+      const numEl = document.getElementById(`num-${completedStep}`);
+      if (stepEl && numEl) {
+        stepEl.classList.remove('active');
+        stepEl.classList.add('completed');
+        numEl.innerHTML = '✓';
+      }
+
+      // Activate next step
+      const nextStepNum = DEMO_STEPS[completedStep].next;
+      currentStep = nextStepNum;
+      
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (el && i === nextStepNum && !el.classList.contains('completed')) {
+          el.classList.add('active');
+        }
+      }
+    }
+  }
+
+  function triggerStep(stepNum) {
+    if (DEMO_STEPS[stepNum]) {
+      sendMessage(DEMO_STEPS[stepNum].prompt, stepNum);
+    }
+  }
+
+  function runNextDemoStep() {
+    triggerStep(currentStep);
+  }
+
+  function updateLedgerUI(ledger) {
+    if (!ledger) return;
+    const total = ledger.total_outstanding !== undefined ? ledger.total_outstanding : 0;
+    const count = ledger.total_customers_with_dues !== undefined ? ledger.total_customers_with_dues : 0;
+    totalDuesEl.textContent = `₹${total}`;
+    customerCountEl.textContent = `${count}`;
+  }
+
+  async function fetchLedger() {
+    try {
+      const res = await fetch('/api/ledger');
+      if (res.ok) {
+        const data = await res.json();
+        updateLedgerUI(data);
+      }
+    } catch (e) {
+      console.error('Failed to fetch ledger:', e);
+    }
+  }
+
+  function detectToolBadge(text) {
+    if (text.includes('darj kar liya gaya') || text.includes('credited')) {
+      return '<div class="tool-badge add_transaction">➕ Tool: add_transaction</div>';
+    } else if (text.includes('Grahak List') || text.includes('paisa lena hai') || text.includes('owes')) {
+      return '<div class="tool-badge get_dues">📋 Tool: get_dues</div>';
+    } else if (text.includes('jama kar diye') || text.includes('Remaining Balance')) {
+      return '<div class="tool-badge record_payment">💵 Tool: record_payment</div>';
+    } else if (text.includes('Reminder Message') || text.includes('taiyaar hain')) {
+      return '<div class="tool-badge send_reminder">🔔 Tool: send_reminder</div>';
+    }
+    return '';
+  }
+
+  function appendMessage(role, text) {
+    const group = document.createElement('div');
+    group.className = `msg-group ${role}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    let formatted = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^>\s*"?([^"\n\r]+)"?$/gm, function(match, msg) {
+        const cleanMsg = msg.replace(/^"|"$/g, '').trim();
+        const encoded = encodeURIComponent(cleanMsg);
+        return `<div class="reminder-box">
+          <div class="sms-header">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25d366"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.771.889 2.796.889 3.182 0 5.768-2.587 5.768-5.766.001-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.518-4.482 10-10 10-1.748 0-3.385-.45-4.815-1.239l-5.185 1.357 1.381-5.048c-.896-1.503-1.381-3.237-1.381-5.07 0-5.518 4.482-10 10-10s10 4.482 10 10z"/></svg>
+            WhatsApp / SMS Reminder Preview
+          </div>
+          "${cleanMsg}"
+          <div>
+            <a href="https://api.whatsapp.com/send?text=${encoded}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.771.889 2.796.889 3.182 0 5.768-2.587 5.768-5.766.001-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.518-4.482 10-10 10-1.748 0-3.385-.45-4.815-1.239l-5.185 1.357 1.381-5.048c-.896-1.503-1.381-3.237-1.381-5.07 0-5.518 4.482-10 10-10s10 4.482 10 10z"/></svg>
+              WhatsApp par Bhejo
+            </a>
+          </div>
+        </div>`;
+      })
+      .replace(/\[WhatsApp par Bhejo\]\((.*?)\)/g, '')
+      .replace(/\n/g, '<br>');
+
+    const badge = role === 'agent' ? detectToolBadge(text) : '';
+    bubble.innerHTML = badge + formatted;
+
+    const meta = document.createElement('div');
+    meta.className = 'bubble-meta';
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    meta.textContent = role === 'user' ? `Aap • ${time}` : `KiranaAI • ${time}`;
+    bubble.appendChild(meta);
+
+    group.appendChild(bubble);
+    chatArea.appendChild(group);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  async function sendMessage(text, stepTriggered = null) {
+    if (!text || !text.trim()) return;
+    const query = text.trim();
+
+    appendMessage('user', query);
+    userInput.value = '';
+
+    typingBar.style.display = 'flex';
+    chatArea.scrollTop = chatArea.scrollHeight;
+    sendBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: query })
+      });
+
+      const data = await res.json();
+      typingBar.style.display = 'none';
+      sendBtn.disabled = false;
+
+      if (res.ok && data.response) {
+        appendMessage('agent', data.response);
+        if (data.ledger) {
+          updateLedgerUI(data.ledger);
+        }
+
+        // Advance stepper if part of demo flow
+        if (stepTriggered) {
+          updateStepperUI(stepTriggered);
+        } else {
+          // Auto-detect step from query
+          const qLower = query.toLowerCase();
+          if (qLower.includes('liya') || qLower.includes('doodh')) updateStepperUI(1);
+          else if (qLower.includes('kaun') || qLower.includes('dena hai')) updateStepperUI(2);
+          else if (qLower.includes('de diye') || qLower.includes('paid')) updateStepperUI(3);
+          else if (qLower.includes('reminder')) updateStepperUI(4);
+        }
+      } else {
+        appendMessage('agent', 'Maaf kijiye Sethji: ' + (data.detail || 'Network error'));
+      }
+    } catch (err) {
+      typingBar.style.display = 'none';
+      sendBtn.disabled = false;
+      appendMessage('agent', 'Connection error. Kripya punah koshish karein.');
+    }
+  }
+
+  function handleSend() {
+    sendMessage(userInput.value);
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSend();
+    }
+  }
+
+  async function resetLedger() {
+    if (!confirm('Kya aap naya demo shuru karne ke liye ledger reset karna chahte hain?')) return;
+    try {
+      const res = await fetch('/api/reset', { method: 'POST' });
+      if (res.ok) {
+        appendMessage('agent', '🧹 Ledger reset kar diya gaya hai! Naye sire se demo shuru karein.');
+        fetchLedger();
+        
+        // Reset stepper
+        for (let i = 1; i <= 4; i++) {
+          const stepEl = document.getElementById(`step-${i}`);
+          const numEl = document.getElementById(`num-${i}`);
+          stepEl.classList.remove('completed', 'active');
+          numEl.textContent = `${i}`;
+        }
+        document.getElementById('step-1').classList.add('active');
+        currentStep = 1;
+      }
+    } catch (e) {
+      alert('Reset error: ' + e);
+    }
+  }
+
+  // Load initial ledger status
+  fetchLedger();
+</script>
+
+</body>
+</html>
