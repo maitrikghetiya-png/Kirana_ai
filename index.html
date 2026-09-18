@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KiranaAI — Digital Udhaar Ledger</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --green: #16a34a;
+      --border: #e5e7eb;
+      --user: #2563eb;
+      --bot: #eef2ff;
+      --danger: #dc2626;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: #dbeafe;
+      font-size: 26px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+    }
+
+    #chat {
+      height: 540px;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg {
+      max-width: 86%;
+      padding: 12px 14px;
+      border-radius: 15px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      font-size: 14px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: var(--user);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: var(--bot);
+      border-bottom-left-radius: 4px;
+    }
+
+    .composer {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 0 18px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+    }
+
+    button:hover { background: var(--primary-dark); }
+
+    .examples {
+      padding: 0 18px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .example {
+      background: #f8fafc;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .example:hover { background: #eef2ff; }
+
+    .summary {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .customers {
+      padding: 0 18px 18px;
+    }
+
+    .customer {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .customer:last-child { border-bottom: 0; }
+
+    .customer-name { font-weight: 700; }
+    .customer-balance { font-weight: 900; }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      padding: 0 18px 18px;
+    }
+
+    .secondary {
+      background: #eef2ff;
+      color: var(--primary-dark);
+      border: 1px solid #c7d2fe;
+      padding: 10px 12px;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 10px 12px;
+    }
+
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: 1fr; }
+      #chat { height: 50vh; }
+      header { align-items: flex-start; }
+      .status { padding-top: 5px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">🧾</div>
+      <div>
+        <h1>KiranaAI</h1>
+        <div class="subtitle">Digital Udhaar Ledger • AI Assistant</div>
+      </div>
+    </div>
+    <div class="status"><span class="dot"></span><span id="statusText">Checking...</span></div>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <div class="card-head">💬 Kirana Assistant</div>
+
+      <div id="chat">
+        <div class="msg bot">
+          Namaste Sethji! 👋<br><br>
+          Try:<br>
+          • Ramesh ne 500 ka doodh liya<br>
+          • Raju ne 200 jama kiya<br>
+          • Kaun paisa dena hai?
+        </div>
+      </div>
+
+      <div class="examples">
+        <button class="example" onclick="useExample('Ramesh ne 500 ka doodh liya')">Add udhaar</button>
+        <button class="example" onclick="useExample('Raju ne 200 jama kiya')">Payment</button>
+        <button class="example" onclick="useExample('Kaun paisa dena hai?')">View dues</button>
+      </div>
+
+      <form class="composer" id="chatForm">
+        <input id="message" autocomplete="off"
+               placeholder="Type: Ramesh ne 500 ka doodh liya">
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <aside class="card">
+      <div class="card-head">📊 Ledger</div>
+
+      <div class="summary">
+        <div class="metric">
+          <div class="metric-label">Total Outstanding</div>
+          <div class="metric-value" id="total">₹0</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Customers With Dues</div>
+          <div class="metric-value" id="count">0</div>
+        </div>
+      </div>
+
+      <div class="customers" id="customers">
+        <div style="color:#6b7280;font-size:13px;">No pending dues.</div>
+      </div>
+
+      <div class="actions">
+        <button class="secondary" onclick="loadLedger()">↻ Refresh</button>
+        <button class="danger" onclick="resetLedger()">Reset</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("message");
+
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = `msg ${type}`;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function useExample(text) {
+    input.value = text;
+    input.focus();
+  }
+
+  async function loadHealth() {
+    try {
+      const res = await fetch("/health");
+      const data = await res.json();
+      document.getElementById("statusText").textContent =
+        data.database === "dynamodb" ? "DynamoDB connected" : "Local database";
+    } catch {
+      document.getElementById("statusText").textContent = "Server offline";
+    }
+  }
+
+  async function loadLedger() {
+    try {
+      const res = await fetch("/api/ledger");
+      const data = await res.json();
+
+      document.getElementById("total").textContent =
+        "₹" + Number(data.total_outstanding || 0).toLocaleString("en-IN");
+
+      document.getElementById("count").textContent =
+        data.total_customers_with_dues || 0;
+
+      const box = document.getElementById("customers");
+      box.innerHTML = "";
+
+      if (!data.customers || data.customers.length === 0) {
+        box.innerHTML = '<div style="color:#6b7280;font-size:13px;">No pending dues.</div>';
+        return;
+      }
+
+      data.customers.forEach(c => {
+        const row = document.createElement("div");
+        row.className = "customer";
+        row.innerHTML = `
+          <span class="customer-name"></span>
+          <span class="customer-balance"></span>
+        `;
+        row.children[0].textContent = c.customer_name;
+        row.children[1].textContent =
+          "₹" + Number(c.balance).toLocaleString("en-IN");
+        box.appendChild(row);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function resetLedger() {
+    if (!confirm("Reset the local ledger?")) return;
+
+    await fetch("/api/reset", { method: "POST" });
+    addMessage("Ledger reset successfully.", "bot");
+    loadLedger();
+  }
+
+  document.getElementById("chatForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, "user");
+    input.value = "";
+
+    const typing = document.createElement("div");
+    typing.className = "msg bot";
+    typing.textContent = "Thinking...";
+    chat.appendChild(typing);
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      typing.remove();
+
+      if (!res.ok) {
+        addMessage(data.detail || "Something went wrong.", "bot");
+        return;
+      }
+
+      addMessage(data.response, "bot");
+      loadLedger();
+    } catch (err) {
+      typing.remove();
+      addMessage("Server se connection nahi ho raha. Check uvicorn.", "bot");
+    }
+  });
+
+  loadHealth();
+  loadLedger();
+</script>
+</body>
+</html>
